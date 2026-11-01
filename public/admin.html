@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#1E4D39">
+<title>Admin – Qalat Al-Shahba Bookings</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=Tajawal:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="admin.html">
+      <img class="mark" src="logo.png" alt="" width="120" height="80">
+      <span class="name" data-i18n="adminName">Booking Admin</span>
+    </a>
+    <div class="tools">
+      <a class="out nav-link" href="index.html" data-i18n="viewBookingPage">🍽️ Booking Page</a>
+      <button class="out" id="lang" type="button" aria-label="Switch language">العربية</button>
+      <button class="out" id="logout" type="button" hidden data-i18n="lock">Lock</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- Security code screen -->
+  <section class="card login" id="login">
+    <h1 data-i18n="loginTitle">Enter security code</h1>
+    <p class="sub" data-i18n="loginSub">This page shows customer bookings and is for staff only.</p>
+    <form id="loginForm" autocomplete="off">
+      <label><span data-i18n="codeLabel">Security code</span>
+        <input id="code" dir="ltr" type="password" required autocomplete="off" spellcheck="false" autocapitalize="characters" placeholder="Enter security code">
+      </label>
+      <p class="err" id="loginErr" role="alert" hidden></p>
+      <button class="go" id="loginBtn" type="submit" data-i18n="unlock">Unlock</button>
+    </form>
+  </section>
+
+  <!-- Bookings & Management App -->
+  <section id="app" hidden>
+    <div class="tabs" role="tablist">
+      <button class="tab on" id="tabB" type="button" role="tab" aria-selected="true" data-i18n="tabBookings">Bookings</button>
+      <button class="tab" id="tabA" type="button" role="tab" aria-selected="false" data-i18n="tabAccounts">Accounts</button>
+    </div>
+
+    <!-- Automated WhatsApp Daily Balance Reminders Card -->
+    <div class="card wa-reminder-card" id="waAutoBox">
+      <div class="wa-rem-header">
+        <div class="wa-rem-title-wrap">
+          <div class="wa-rem-icon">💬</div>
+          <div>
+            <h2 data-i18n="waCardTitle">Daily Automated WhatsApp Balance Due Reminders</h2>
+            <p class="sub" data-i18n="waCardSub">Automatically notifies customers with pending balances every day via WhatsApp with contract breakdown.</p>
+          </div>
+        </div>
+        <div class="wa-rem-badge-wrap">
+          <span class="wa-auto-pill" id="waAutoStatusPill">
+            <span class="pulse-dot"></span>
+            <span id="waAutoStatusText" data-i18n="waAutoActive">Daily Auto-Reminder Active (10:00 AM)</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="wa-rem-stats">
+        <div class="wa-stat-item">
+          <span class="wa-stat-num" id="waDueCount">0</span>
+          <span class="wa-stat-lbl" data-i18n="waDueCountLbl">Customers with Balance</span>
+        </div>
+        <div class="wa-stat-item highlight">
+          <span class="wa-stat-num" id="waDueTotal">0 SAR</span>
+          <span class="wa-stat-lbl" data-i18n="waDueTotalLbl">Total Balance to Collect</span>
+        </div>
+        <div class="wa-stat-item">
+          <span class="wa-stat-num" id="waSentTodayCount">0</span>
+          <span class="wa-stat-lbl" data-i18n="waSentTodayLbl">Reminders Sent Today</span>
+        </div>
+        <div class="wa-stat-item pending">
+          <span class="wa-stat-num" id="waPendingTodayCount">0</span>
+          <span class="wa-stat-lbl" data-i18n="waPendingTodayLbl">Pending Reminder Today</span>
+        </div>
+      </div>
+
+      <div class="wa-rem-actions">
+        <button class="go wa-bulk-btn" id="waSendAllDueBtn" type="button">
+          <span>⚡</span> <span data-i18n="waSendAllBtn">Send Today's WhatsApp Due Reminders</span>
+        </button>
+        <button class="ghost" id="waSettingsBtn" type="button">
+          ⚙️ <span data-i18n="waSettingsBtn">Automation Settings</span>
+        </button>
+        <button class="ghost" id="waLogBtn" type="button">
+          📋 <span data-i18n="waLogBtn">Reminder Log</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Booking Stats -->
+    <div class="stats" id="bkStats">
+      <div><b id="sTotal">0</b><span data-i18n="sTotal">All bookings</span></div>
+      <div><b id="sNew">0</b><span data-i18n="sNew">New</span></div>
+      <div><b id="sConfirmed">0</b><span data-i18n="sConfirmed">Confirmed</span></div>
+      <div><b id="sWeek">0</b><span data-i18n="sWeek">Next 7 days</span></div>
+    </div>
+
+    <!-- Accounts Stats -->
+    <div class="stats" id="acStats" hidden>
+      <div><b id="acTotal">0</b><span data-i18n="acTotalL">Total contracted (SAR)</span></div>
+      <div><b id="acPaid">0</b><span data-i18n="acPaidL">Received so far (SAR)</span></div>
+      <div><b id="acRemain">0</b><span data-i18n="acRemainL">Balance to collect (SAR)</span></div>
+      <div><b id="acSec">0</b><span data-i18n="acSecL">Security deposits held (SAR)</span></div>
+    </div>
+
+    <!-- Toolbar Filters -->
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Search name, phone, number or city" data-i18n-ph="searchPh" aria-label="Search">
+      <select id="fStatus" aria-label="Status">
+        <option value="" data-i18n="allStatuses">All statuses</option>
+        <option value="new" data-i18n="st_new">New</option>
+        <option value="confirmed" data-i18n="st_confirmed">Confirmed</option>
+        <option value="completed" data-i18n="st_completed">Completed</option>
+        <option value="cancelled" data-i18n="st_cancelled">Cancelled</option>
+      </select>
+      <select id="fBalance" aria-label="Balance and Reminder Filter">
+        <option value="" data-i18n="fBalAll">All balances</option>
+        <option value="due" data-i18n="fBalDue">⚠️ Has balance due</option>
+        <option value="pending" data-i18n="fBalPending">⏰ Needs reminder today</option>
+        <option value="sent_today" data-i18n="fBalSentToday">✓ Reminded today</option>
+      </select>
+      <select id="fWhen" aria-label="When">
+        <option value="upcoming" data-i18n="upcoming">Upcoming events</option>
+        <option value="all" data-i18n="allDates">All dates</option>
+        <option value="past" data-i18n="past">Past events</option>
+      </select>
+      <button class="ghost" id="refresh" type="button" data-i18n="refresh">Refresh</button>
+      <button class="ghost" id="csv" type="button" data-i18n="csv">Download CSV</button>
+    </div>
+
+    <p class="count" id="count" aria-live="polite"></p>
+    <p class="err" id="appErr" role="alert" hidden></p>
+    <div class="notice" id="notice" role="status" hidden><span id="noticeText"></span> <a class="wa" id="noticeLink" target="_blank" rel="noopener noreferrer"></a></div>
+    
+    <!-- Bookings Cards Grid -->
+    <div class="list" id="list"></div>
+
+    <!-- Accounts Table View -->
+    <div class="tablewrap" id="acWrap" hidden>
+      <table class="ac">
+        <thead><tr>
+          <th data-i18n="thRef">Booking no.</th><th data-i18n="thCustomer">Customer</th><th data-i18n="thDate">Event date</th>
+          <th data-i18n="thStatus">Status</th><th class="num" data-i18n="thTotal">Total (SAR)</th>
+          <th class="num" data-i18n="thDeposit">Deposit (SAR)</th><th class="num" data-i18n="thCollected">Collected (SAR)</th>
+          <th class="num" data-i18n="thBalance">Balance due (SAR)</th>
+          <th class="num" data-i18n="thSecurity">Security (SAR)</th><th data-i18n="thActions">Actions</th>
+        </tr></thead>
+        <tbody id="acBody"></tbody>
+        <tfoot id="acFoot"></tfoot>
+      </table>
+    </div>
+
+    <!-- First Party Signature Card -->
+    <details class="card change" id="fpBox">
+      <summary data-i18n="fpTitle">First party signature</summary>
+      <p class="sub" data-i18n="fpSub">One concerned person signs for the first party. Set their name and signing code below. Nobody else can sign for the first party, even another admin. You can also save a default signature to show on agreements.</p>
+
+      <h3 class="fph" data-i18n="fpWhoTitle">Who signs for the first party</h3>
+      <p class="sub" data-i18n="fpWhoSub">Only the concerned person, who knows the signing code, can sign. Their name is printed on the agreement.</p>
+      <label><span data-i18n="fpName">Name of the concerned person</span>
+        <input id="fpName" maxlength="120" autocomplete="off">
+      </label>
+      <label id="fpOldRow" hidden><span data-i18n="fpPinOld">Current signing code</span>
+        <input id="fpPinOld" type="password" autocomplete="off">
+      </label>
+      <label><span data-i18n="fpPinNew">New signing code (at least 6 characters)</span>
+        <input id="fpPinNew" type="password" autocomplete="new-password">
+      </label>
+      <p class="err" id="fpWhoMsg" role="status" hidden></p>
+      <button class="go" id="fpSaveWho" type="button" data-i18n="fpSaveWho">Save signer details</button>
+
+      <h3 class="fph" data-i18n="fpDefTitle">Default signature</h3>
+      <div class="fpcur" id="fpCur" hidden>
+        <span data-i18n="fpCurrent">Saved signature</span>
+        <img id="fpImg" alt="">
+      </div>
+      <div class="fppad"><canvas id="fpCanvas" width="800" height="240" aria-label="Signature pad"></canvas><span class="fphint" data-i18n="fpHint">Sign here</span></div>
+      <label><span data-i18n="fpPin">Signing code</span>
+        <input id="fpPin" type="password" autocomplete="off">
+      </label>
+      <p class="err" id="fpMsg" role="status" hidden></p>
+      <div class="actions">
+        <button class="go" id="fpSave" type="button" data-i18n="fpSave">Save signature</button>
+        <button class="ghost" id="fpClear" type="button" data-i18n="fpClear">Clear</button>
+        <button class="ghost" id="fpRemove" type="button" data-i18n="fpRemove" hidden>Remove saved signature</button>
+      </div>
+    </details>
+
+    <!-- Change Security Code -->
+    <details class="card change">
+      <summary data-i18n="changeTitle">Change security code</summary>
+      <form id="changeForm" autocomplete="off">
+        <label><span data-i18n="newCodeL">New security code (at least 10 characters)</span>
+          <input id="newCode" type="password" minlength="10" required autocomplete="new-password">
+        </label>
+        <label><span data-i18n="newCode2L">Repeat new code</span>
+          <input id="newCode2" type="password" minlength="10" required autocomplete="new-password">
+        </label>
+        <p class="err" id="changeMsg" role="status" hidden></p>
+        <button class="go" type="submit" data-i18n="saveCode">Save new code</button>
+      </form>
+    </details>
+  </section>
+</main>
+
+<!-- Agreement Details Dialog -->
+<dialog id="agDialog">
+  <form id="agForm" autocomplete="off">
+    <h2 data-i18n="agTitle">Payment details</h2>
+    <p class="sub" id="agWho"></p>
+    <p class="sub" data-i18n="agSub">Enter the agreed amounts. They are saved for the Accounts team and used in the agreement.</p>
+    <label><span data-i18n="agTotal">Total amount (SAR)</span><input id="agTotal" type="number" min="0" step="any" inputmode="decimal" dir="ltr"></label>
+    <p class="sub" id="agPkgHint" hidden></p>
+    <label><span data-i18n="agDeposit">Deposit paid (SAR)</span><input id="agDeposit" type="number" min="0" step="any" inputmode="decimal" dir="ltr"></label>
+    <label><span data-i18n="agInsurance">Security deposit (SAR)</span><input id="agInsurance" type="number" min="0" step="any" inputmode="decimal" dir="ltr"></label>
+    <label><span data-i18n="agRemaining">Remaining (SAR)</span><input id="agRemain" class="calc" value="—" readonly tabindex="-1" dir="ltr"></label>
+    <p class="err" id="agErr" role="alert" hidden></p>
+    <div class="dlg-actions">
+      <button class="go" id="agSaveBtn" type="submit" data-i18n="agSaveBtn">Save</button>
+      <button class="ghost" id="agSkip" type="button" data-i18n="agSkip">Close</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Payment Collection Dialog -->
+<dialog id="payDialog">
+  <form id="payForm" autocomplete="off">
+    <h2 data-i18n="payTitle">Collect remaining amount</h2>
+    <p class="sub" id="payWho"></p>
+    <div class="paysum">
+      <div><span data-i18n="pTotal">Total</span><b id="pyTotal" dir="ltr">—</b></div>
+      <div><span data-i18n="pDeposit">Deposit</span><b id="pyDeposit" dir="ltr">—</b></div>
+      <div><span data-i18n="pCollected">Collected</span><b id="pyCollected" dir="ltr">—</b></div>
+      <div class="due"><span data-i18n="pBalance">Balance due</span><b id="pyBalance" dir="ltr">—</b></div>
+    </div>
+    <label><span data-i18n="payAmount">Amount received (SAR)</span><input id="payAmount" type="number" min="0.01" step="any" inputmode="decimal" dir="ltr" required></label>
+    <div class="row2">
+      <label><span data-i18n="payMethod">Payment method</span>
+        <select id="payMethod">
+          <option value="cash" data-i18n="m_cash">Cash</option>
+          <option value="bank_transfer" data-i18n="m_bank_transfer">Bank transfer</option>
+          <option value="card" data-i18n="m_card">Card / Mada</option>
+          <option value="other" data-i18n="m_other">Other</option>
+        </select>
+      </label>
+      <label><span data-i18n="payDate">Payment date</span><input id="payDate" type="date" dir="ltr" required></label>
+    </div>
+    <label><span data-i18n="payReceipt">Receipt or transfer number (optional)</span><input id="payReceipt" maxlength="60" dir="ltr"></label>
+    <label><span data-i18n="payNote">Note (optional)</span><input id="payNote" maxlength="300"></label>
+    <p class="err" id="payErr" role="alert" hidden></p>
+    <div class="dlg-actions">
+      <button class="go" id="payGo" type="submit" data-i18n="payRecord">Record payment</button>
+      <button class="ghost" id="payClose" type="button" data-i18n="agSkip">Close</button>
+    </div>
+    <h3 class="payh" data-i18n="payHistory">Payments received</h3>
+    <ul class="payhist" id="payHist"></ul>
+  </form>
+</dialog>
+
+<!-- Bulk WhatsApp Daily Due Reminders Dialog -->
+<dialog id="waBulkDialog" class="dialog-wide">
+  <h2 data-i18n="waBulkTitle">Daily WhatsApp Balance Reminders</h2>
+  <p class="sub" data-i18n="waBulkSub">Customers with an unpaid balance. You can dispatch automated WhatsApp reminders to all selected customers.</p>
+  
+  <div class="wa-progress-bar" id="waProgressBar" hidden>
+    <div class="wa-progress-fill" id="waProgressFill"></div>
+  </div>
+  <p class="err ok" id="waBulkStatusMsg" role="status" hidden></p>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
+    <label style="display:inline-flex;align-items:center;gap:.4rem;margin:0;cursor:pointer;">
+      <input type="checkbox" id="waSelectAll" checked style="width:auto;margin:0;">
+      <span data-i18n="waSelectAllLbl" style="font-size:.9rem;font-weight:700;">Select All</span>
+    </label>
+    <span id="waSelectedCountText" style="font-size:.88rem;color:var(--muted)">0 selected</span>
+  </div>
+
+  <ul class="wa-queue-list" id="waQueueList"></ul>
+
+  <div class="dlg-actions" style="grid-template-columns:1fr 1fr;margin-top:1rem;">
+    <button class="go wa-bulk-btn" id="waStartDispatchBtn" type="button" style="grid-column:1/-1;">
+      ⚡ <span data-i18n="waStartDispatch">Open & Send Reminders to Selected Customers</span>
+    </button>
+    <button class="ghost" id="waCloseBulkBtn" type="button" data-i18n="agSkip" style="grid-column:1/-1;">Close</button>
+  </div>
+</dialog>
+
+<!-- Single Customer WhatsApp Balance Reminder Dialog -->
+<dialog id="waSingleDialog">
+  <h2 data-i18n="waSingleTitle">Send WhatsApp Balance Reminder</h2>
+  <p class="sub" id="waSingleWho"></p>
+
+  <div class="paysum" style="margin-bottom:.8rem;">
+    <div><span data-i18n="pTotal">Total</span><b id="waSTotal" dir="ltr">—</b></div>
+    <div><span data-i18n="pDeposit">Paid so far</span><b id="waSPaid" dir="ltr">—</b></div>
+    <div class="due" style="grid-column:1/-1;"><span data-i18n="pBalance">Balance Due</span><b id="waSBalance" dir="ltr">—</b></div>
+  </div>
+
+  <label><span data-i18n="waMsgPreview">WhatsApp Message</span>
+    <textarea id="waSingleText" rows="6"></textarea>
+  </label>
+
+  <p class="err ok" id="waSingleMsg" role="status" hidden></p>
+
+  <div class="dlg-actions">
+    <a class="go wa-bulk-btn" id="waSingleOpenLink" target="_blank" rel="noopener noreferrer" style="grid-column:1/-1;justify-content:center;text-decoration:none;">
+      💬 <span data-i18n="waOpenChat">Open WhatsApp & Send</span>
+    </a>
+    <button class="ghost" id="waSingleCopyBtn" type="button">📋 <span data-i18n="waCopyMsg">Copy Message</span></button>
+    <button class="ghost" id="waSingleCloseBtn" type="button" data-i18n="agSkip">Close</button>
+  </div>
+</dialog>
+
+<!-- Automation Settings Dialog -->
+<dialog id="waSettingsDialog" class="dialog-wide">
+  <form id="waSettingsForm" autocomplete="off">
+    <h2 data-i18n="waSetTitle">Daily WhatsApp Automation Settings</h2>
+    <p class="sub" data-i18n="waSetSub">Configure the automated schedule and message template for balance reminders.</p>
+
+    <div class="wa-toggle-row">
+      <label for="waSetEnabled">
+        <b data-i18n="waSetEnableLbl">Enable Daily WhatsApp Reminders</b>
+        <span class="sub" style="display:block;margin:0;font-size:.85rem;" data-i18n="waSetEnableSub">Prompts and prepares WhatsApp balance reminders everyday automatically.</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="waSetEnabled" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="row2">
+      <label><span data-i18n="waSetTime">Daily Check Time</span>
+        <input id="waSetTime" type="time" value="10:00" required>
+      </label>
+      <label><span data-i18n="waSetDaysBefore">Event Window</span>
+        <select id="waSetDaysBefore">
+          <option value="all" data-i18n="waOptAll">All customers with balance due</option>
+          <option value="3" data-i18n="waOpt3">Events within next 3 days</option>
+          <option value="5" data-i18n="waOpt5">Events within next 5 days (recommended)</option>
+          <option value="7" data-i18n="waOpt7">Events within next 7 days</option>
+          <option value="14" data-i18n="waOpt14">Events within next 14 days</option>
+        </select>
+      </label>
+    </div>
+
+    <label><span data-i18n="waSetTemplateAr">Arabic Message Template</span>
+      <textarea id="waSetTemplateAr" rows="5"></textarea>
+    </label>
+    <p class="sub" style="font-size:.82rem;margin-top:-.4rem;" data-i18n="waTagsHint">Available tags: {name}, {ref}, {date}, {total}, {paid}, {balance}</p>
+
+    <label><span data-i18n="waSetTemplateEn">English Message Template</span>
+      <textarea id="waSetTemplateEn" rows="5"></textarea>
+    </label>
+
+    <p class="err ok" id="waSettingsMsg" role="status" hidden></p>
+
+    <div class="dlg-actions">
+      <button class="go" type="submit" data-i18n="waSaveSettings">Save Settings</button>
+      <button class="ghost" id="waSettingsCloseBtn" type="button" data-i18n="agSkip">Close</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- WhatsApp Reminders History Log Dialog -->
+<dialog id="waLogDialog" class="dialog-wide">
+  <h2 data-i18n="waLogTitle">WhatsApp Reminder History</h2>
+  <p class="sub" data-i18n="waLogSub">Log of WhatsApp balance due reminders sent to customers.</p>
+
+  <div class="tablewrap" style="max-height:22rem;overflow:auto;">
+    <table class="wa-log-table">
+      <thead>
+        <tr>
+          <th data-i18n="thDate">Date/Time</th>
+          <th data-i18n="thRef">Booking</th>
+          <th data-i18n="thCustomer">Customer</th>
+          <th data-i18n="lPhone">Phone</th>
+          <th data-i18n="pBalance">Amount Due</th>
+          <th data-i18n="thActions">Action</th>
+        </tr>
+      </thead>
+      <tbody id="waLogBody"></tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
+    <button class="ghost" id="waClearLogBtn" type="button" style="color:var(--err);border-color:var(--err);" data-i18n="waClearLog">Clear History</button>
+    <button class="ghost" id="waCloseLogBtn" type="button" data-i18n="agSkip">Close</button>
+  </div>
+</dialog>
+
+<script>
+  const SUPABASE_URL = "https://fnhrhwetirpibloszobv.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_FTES6iQh4D-y6JtdD3LmDA_4hTA56A4";
+  window.SUPABASE_CONFIG = { url: SUPABASE_URL, key: SUPABASE_ANON_KEY };
+</script>
+<script src="agreement.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

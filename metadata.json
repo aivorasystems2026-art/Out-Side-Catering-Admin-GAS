@@ -1,0 +1,6 @@
+{
+  "name": "Qalat Al-Shahba Catering & Admin System",
+  "description": "Outdoor catering booking management, contract agreements, accounting, and automated daily WhatsApp balance due reminder system for Qalat Al-Shahba restaurants.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

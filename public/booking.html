@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#1E4D39">
+<title>مطاعم قلعة الشهباء – تقديم الطعام خارج المنزل</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=Tajawal:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="booking.html">
+      <img class="mark" src="logo.png" alt="مطاعم قلعة الشهباء" width="120" height="80">
+      <span class="name" data-i18n="logo">مطاعم قلعة الشهباء</span>
+    </a>
+    <div class="tools">
+      <a class="lang" href="admin.html" style="text-decoration:none;display:inline-flex;align-items:center;">👑 لوحة الإدارة</a>
+      <button class="lang" id="lang" type="button" aria-label="تغيير اللغة">English</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1 data-i18n="h1">نطبخ في موقع مناسبتك، ليصل كل طبق ساخناً.</h1>
+      <p class="lead" data-i18n="lead">أعراس ولقاءات عائلية وإفطارات رمضان وفعاليات الشركات. أخبرنا بالمكان والموعد، وسيصل فريقنا بالمطبخ والعمال والطعام.</p>
+      <ul class="facts">
+        <li>
+          <b data-i18n="f1t">الطبخ في موقعك</b>
+          <span data-i18n="f1d">لدينا أفضل الطباخين على مستوى عالمي يتناسب مع جميع الأذواق العالمية العربية والاسيوية الأوربية والأيطالية</span>
+        </li>
+        <li>
+          <b data-i18n="f2t">من 25 إلى 2,000 ضيف</b>
+          <span data-i18n="f2d">قوائم الطعام وعدد العمال بحسب حجم مناسبتك.</span>
+        </li>
+        <li>
+          <b data-i18n="f3t">نرد عليك خلال 24 ساعة</b>
+          <span data-i18n="f3d">نؤكد معك القائمة والسعر والموعد بالاتصال.</span>
+        </li>
+      </ul>
+      <div class="trackhint">
+        <a href="#track" data-i18n="trackLink">هل حجزت من قبل؟ تحقق من حالة حجزك</a>
+      </div>
+    </div>
+
+    <!-- Booking Form Card -->
+    <div class="card">
+      <h2 data-i18n="bookTitle">احجز مناسبتك</h2>
+      <p class="sub" data-i18n="bookSub">عبّئ البيانات أدناه وسنتصل بك للتأكيد.</p>
+
+      <form id="form" autocomplete="on">
+        <fieldset>
+          <legend data-i18n="lgYou">بياناتك</legend>
+          <label><span data-i18n="name">الاسم الكامل</span><input name="name" required autocomplete="name"></label>
+          <div class="row">
+            <label><span data-i18n="phone">رقم الجوال</span><input name="phone" type="tel" dir="ltr" required placeholder="05XXXXXXXX" autocomplete="tel"></label>
+            <label><span data-i18n="idno">رقم الهوية الوطنية أو الإقامة</span><input name="idno" type="text" inputmode="numeric" maxlength="10" dir="ltr" required placeholder="1XXXXXXXXX"></label>
+          </div>
+        </fieldset>
+
+        <div class="terms-gate">
+          <a class="terms-link" id="termsLink" href="#" data-i18n="termsBtn">اقرأ الشروط والأحكام أولاً، قبل أن تحجز مناسبتك</a>
+          <label class="accept">
+            <input type="checkbox" id="accept" required>
+            <span data-i18n="accept">أوافق على الشروط والأحكام</span>
+          </label>
+          <p class="note" id="acceptHint" data-i18n="acceptHint">ضع علامة (أوافق) لمتابعة الحجز.</p>
+        </div>
+
+        <fieldset class="gated">
+          <legend data-i18n="lgBuffet">نوع البوفيه</legend>
+          <label><span data-i18n="buffet">اختر نوع البوفيه</span>
+            <select name="buffet" required>
+              <option value="Silver" data-i18n="buffetSilver">بوفيه الفضي</option>
+              <option value="VIP" data-i18n="buffetVip">بوفية الجمعات الصغيرة - الباحة فقط</option>
+              <option value="VIPKing" data-i18n="buffetKing">بوفيه VIP ملكي</option>
+              <option value="Coffee" data-i18n="buffetCoffee">بوفيه كوفي بريك</option>
+              <option value="Breakfast" data-i18n="buffetBreakfast">بوفيه فطور</option>
+            </select>
+          </label>
+
+          <!-- Package picker -->
+          <div class="field" id="pkgBox">
+            <span class="flabel" data-i18n="pkg">اختر الباقة</span>
+            <div class="pk" id="pk">
+              <button class="pk-btn" id="pkBtn" type="button" aria-haspopup="listbox" aria-expanded="false"><span id="pkTxt" data-i18n="choosePkg">اختر الباقة</span></button>
+              <div class="pk-back" id="pkBack" hidden></div>
+              <div class="pk-list" id="pkList" role="listbox" hidden></div>
+              <select name="package" id="pkgSel" tabindex="-1" aria-hidden="true">
+                <option value="" data-i18n="choosePkg">اختر الباقة</option>
+              </select>
+            </div>
+            <p class="note" id="pkgInfo" hidden></p>
+          </div>
+
+          <!-- Menu items picker for coffee break & breakfast -->
+          <div class="field" id="cbBox" hidden>
+            <span class="flabel" data-i18n="cb">اختر أصناف المنيو</span>
+            <div class="pk" id="cb">
+              <button class="pk-btn" id="cbBtn" type="button" aria-haspopup="listbox" aria-expanded="false"><span id="cbTxt" data-i18n="cbPick">اختر الأصناف</span></button>
+              <div class="pk-back" id="cbBack" hidden></div>
+              <div class="pk-list" id="cbList" role="listbox" hidden></div>
+            </div>
+            <p class="note" id="cbInfo" hidden></p>
+          </div>
+
+          <label><span data-i18n="pkgPrice">سعر الباقة (ريال)</span><input id="pkgPrice" class="calc" value="—" readonly tabindex="-1" dir="ltr"></label>
+          <p class="note" id="rateInfo" hidden></p>
+        </fieldset>
+
+        <fieldset class="gated">
+          <legend data-i18n="lgWhen">اليوم والوقت</legend>
+          <div class="row">
+            <label><span data-i18n="calType">نوع التقويم</span>
+              <select id="cal" name="cal">
+                <option value="H" data-i18n="calH">هجري</option>
+                <option value="G" data-i18n="calG">ميلادي</option>
+              </select>
+            </label>
+            <label><span data-i18n="time">وقت تقديم الطعام</span><input name="time" type="time" required value="20:30"></label>
+          </div>
+          <div id="gBox" hidden>
+            <label><span data-i18n="date">تاريخ المناسبة</span><input id="date" name="date" type="date"></label>
+          </div>
+          <div id="hBox">
+            <span class="flabel" data-i18n="date">تاريخ المناسبة</span>
+            <div class="row3">
+              <label><span data-i18n="day">اليوم</span><select id="hd" name="hd"></select></label>
+              <label><span data-i18n="month">الشهر</span><select id="hm" name="hm"></select></label>
+              <label><span data-i18n="year">السنة</span><select id="hy" name="hy"></select></label>
+            </div>
+          </div>
+          <p class="note eq" id="equiv"></p>
+        </fieldset>
+
+        <fieldset class="gated">
+          <legend data-i18n="lgWhere">موقع الحفلة</legend>
+          <label><span data-i18n="address">عنوان المكان</span><input name="address" required placeholder="اسم المكان، الشارع، أقرب معلم" data-i18n-ph="addressPh"></label>
+          <div class="row">
+            <label><span data-i18n="city">المدينة</span>
+              <select name="city" required>
+                <option value="" data-i18n="chooseCity">اختر المدينة</option>
+                <option value="الرياض">الرياض</option>
+                <option value="جدة">جدة</option>
+                <option value="الدمام">الدمام</option>
+                <option value="مكة المكرمة">مكة المكرمة</option>
+                <option value="المدينة المنورة">المدينة المنورة</option>
+                <option value="الباحة">الباحة</option>
+                <option value="الخبر">الخبر</option>
+                <option value="الظهران">الظهران</option>
+                <option value="الطائف">الطائف</option>
+                <option value="أبها">أبها</option>
+                <option value="خميس مشيط">خميس مشيط</option>
+                <option value="بريدة">بريدة</option>
+                <option value="تبوك">تبوك</option>
+                <option value="حائل">حائل</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </label>
+            <label><span data-i18n="postal">الرمز البريدي (اختياري)</span><input name="postal" dir="ltr" inputmode="numeric"></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="gated">
+          <legend data-i18n="lgEvent">مناسبتك</legend>
+          <label><span data-i18n="guests">عدد الضيوف</span>
+            <input name="guests" type="number" min="10" max="2500" required value="50">
+            <span class="gmin" id="gmin" hidden data-i18n="gminHint">الحد الأدنى 25 ضيفاً لهذا البوفيه.</span>
+          </label>
+          <label><span data-i18n="notes">هل هناك شيء آخر نحتاج معرفته؟</span><textarea name="notes" placeholder="أطباق خاصة، حساسية، وقت التجهيز" data-i18n-ph="notesPh"></textarea></label>
+        </fieldset>
+
+        <p class="err" id="err" role="alert" hidden></p>
+        <button class="go" type="submit" data-i18n="submit">أرسل طلب الحجز</button>
+        <p class="note" data-i18n="note">هذا ليس دفعاً. نؤكد السعر بعد الاتصال بك.</p>
+      </form>
+
+      <!-- Confirmation Screen -->
+      <div class="confirm" id="confirm" tabindex="-1">
+        <h2 data-i18n="doneTitle">تم استلام طلبك</h2>
+        <p class="sub" data-i18n="doneSub">سنتصل بك على الرقم أدناه خلال 24 ساعة.</p>
+        <dl id="summary"></dl>
+        <button class="link" id="again" type="button" data-i18n="again">حجز جديد</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menus Section -->
+  <section class="menus">
+    <div class="wrap">
+      <h2 data-i18n="menusTitle">ما نحضره إلى موقعك</h2>
+      <div class="grid">
+        <div>
+          <h3 data-i18n="m1t">كبسة ومندي</h3>
+          <p data-i18n="m1d">أرز مطبوخ ببطء مع لحم الضأن أو الدجاج أو الإبل، يُقدَّم في صواني كبيرة للجميع.</p>
+        </div>
+        <div>
+          <h3 data-i18n="m2t">مشويات ومضبي</h3>
+          <p data-i18n="m2d">مشاوي مشكلة ومضبي ومطبق تُحضَّر في الموقع على الفحم.</p>
+        </div>
+        <div>
+          <h3 data-i18n="m3t">قهوة وتمر وحلويات</h3>
+          <p data-i18n="m3d">ضيافة قهوة عربية وشاي مع تمر طازج وكنافة ولقيمات لضيوفك.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Track Booking Section -->
+  <section class="track" id="track">
+    <div class="wrap">
+      <h2 data-i18n="trackTitle">تحقق من حجزك</h2>
+      <p class="sub" data-i18n="trackSub">أدخل رقم الجوال الذي استخدمته عند الحجز لعرض تفاصيل حجزك وحالته.</p>
+      <form class="trackform" id="trackForm" autocomplete="on">
+        <label class="trackfield">
+          <span data-i18n="phone">رقم الجوال</span>
+          <input id="trackPhone" type="tel" dir="ltr" required placeholder="05XXXXXXXX" autocomplete="tel">
+        </label>
+        <button class="go" id="trackBtn" type="submit" data-i18n="trackBtn">تحقق</button>
+      </form>
+      <p class="trackmsg" id="trackMsg" role="status" hidden></p>
+      <div class="trackout" id="trackOut"></div>
+    </div>
+  </section>
+
+  <!-- Steps Section -->
+  <section class="steps">
+    <div class="wrap">
+      <h2 data-i18n="stepsTitle">كيف نعمل</h2>
+      <ol>
+        <li>
+          <small data-i18n="s1n">الخطوة 1</small>
+          <b data-i18n="s1t">أرسل بياناتك</b>
+          <p data-i18n="s1d">أرسل التاريخ والوقت والمكان عبر النموذج.</p>
+        </li>
+        <li>
+          <small data-i18n="s2n">الخطوة 2</small>
+          <b data-i18n="s2t">نتصل بك</b>
+          <p data-i18n="s2d">نتفق معك على القائمة والسعر، ثم نأخذ دفعة مقدمة صغيرة.</p>
+        </li>
+        <li>
+          <small data-i18n="s3n">الخطوة 3</small>
+          <b data-i18n="s3t">نصل ونقدّم</b>
+          <p data-i18n="s3d">يجهّز فريقنا المكان ويطبخ ويقدّم الطعام ثم ينظّف.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap" data-i18n="foot">مطاعم قلعة الشهباء لتقديم الطعام خارج المنزل · نعمل يومياً من 9 صباحاً حتى 11 مساءً · الرياض وجدة والدمام وما حولها</div>
+</footer>
+
+<script>
+  const SUPABASE_URL = "https://fnhrhwetirpibloszobv.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_FTES6iQh4D-y6JtdD3LmDA_4hTA56A4";
+  window.SUPABASE_CONFIG = { url: SUPABASE_URL, key: SUPABASE_ANON_KEY };
+</script>
+<script src="agreement.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
